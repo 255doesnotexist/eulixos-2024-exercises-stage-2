@@ -1,0 +1,31 @@
+root = true
+
+[*]
+charset = utf-8
+end_of_line = lf
+indent_size = 2
+indent_style = space
+insert_final_newline = true
+max_line_length = 72
+tab_width = 4
+trim_trailing_whitespace = true
+
+# Use clang-format to guide the C style.
+# [*.c, *.h]
+# tab_width = 8
+# max_line_length = 79
+
+[*.md]
+max_line_length = 120
+trim_trailing_whitespace = false
+
+[*.nix]
+tab_width = 2
+
+[**/CMakeLists.txt]
+indent_size = 4
+
+[**/Makefile]
+indent_style = tab
+indent_size = 4
+tab_width = 4

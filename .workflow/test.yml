@@ -1,0 +1,60 @@
+version: '1.0'
+name: test
+displayName: test
+triggers:
+  trigger: auto
+  push:
+    branches:
+      precise:
+        - master
+  pr:
+    branches:
+      precise:
+        - master
+variables:
+  POST_API: https://api.learningcamp.cn/web/api/courseRank/createByThird
+stages:
+  - name: toolchain
+    displayName: build toolchain
+    strategy: naturally
+    trigger: auto
+    executor: []
+    steps:
+      - step: execute@docker
+        name: execute_by_docker
+        displayName: docker build
+        image: docker.io/yuchanns/qemu-system-riscv64:ubuntu22.04-gdb2022.04.12
+        command:
+          - sed -i 's@//.*archive.ubuntu.com@//mirrors.ustc.edu.cn@g' /etc/apt/sources.list
+          - apt-get update
+          - apt-get install -y git opensbi u-boot-qemu sshpass openssh-client jq curl
+          - cd ..
+          - cd ..
+          - git clone https://isrc.iscas.ac.cn/gitlab/learningeulixos/2024-exercises-virtual-machines.git
+          - echo "clone success"
+          - cd 2024-exercises-virtual-machines
+          - qemu-system-riscv64 -machine 'virt' -cpu 'rv64' -m 1G -device virtio-blk-device,drive=hd -drive file=stage-1.qcow2,if=none,id=hd -device virtio-net-device,netdev=net -netdev user,id=net,hostfwd=tcp::2222-:22  -virtfs local,id=lee,path=../$GITEE_REPO,mount_tag=lee,security_model=passthrough -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf -object rng-random,filename=/dev/urandom,id=rng -device virtio-rng-device,rng=rng -append "root=LABEL=rootfs console=ttyS0" -display none -daemonize
+          - echo "qemu starting"
+          - sleep 120
+          - ps -aux | grep "qemu"
+          - echo "qemu started"
+          - sshpass -p "root" ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -vv root@localhost "chmod -R +x /lee/test"
+          - echo "chmod success"
+          - sshpass -p "root" ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -vv root@localhost "make -C /lee"
+          - echo "make success"
+          - sshpass -p "root" ssh -p 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null -vv root@localhost "make -C /lee test"
+          - echo "test success"
+          - sshpass -p "root" scp -P 2222 -o StrictHostKeyChecking=no -o UserKnownHostsFile=/dev/null root@localhost:/lee/result/report.json ../$GITEE_REPO/report.json
+          - echo "scp success"
+          - cd ../$GITEE_REPO
+          - gitee_id="$GITEE_PIPELINE_TRIGGER_USER"
+          - json_file="report.json"
+          - existing_json=$(cat "$json_file")
+          - updated_json=$(echo "$existing_json" | jq --arg gitee_id "$gitee_id" '.name = $gitee_id')
+          - echo "$updated_json" > "$json_file"
+          - cat report.json
+          - 'curl -X POST "$POST_API" -H "accept: application/json;charset=utf-8" -H "Content-Type: application/json" -d "$(cat report.json)" -v'
+        notify: []
+        strategy:
+          retry: '0'
+          timeout: null
