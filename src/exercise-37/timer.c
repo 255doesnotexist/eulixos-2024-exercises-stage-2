@@ -17,7 +17,9 @@ timer_init (void)
   printk (KERN_INFO "Module loaded\n");
 
   // >>> 在这里实现计数器
+  timer_setup(&my_timer, my_timer_callback, 0);
   // >>> Start timer after 5000 milliseconds (5 seconds)
+  mod_timer(&my_timer, jiffies + msecs_to_jiffies(5000));
 
   return 0;
 }
