@@ -4,9 +4,13 @@
 void
 transposeInPlace (int matrix[N][N])
 {
-  // 在下面实现矩阵原地转置,即空间复杂度为O(1)
-
-  //
+    for (int i = 0; i < N; i++) {
+        for (int j = i + 1; j < N; j++) {
+            matrix[i][j] ^= matrix[j][i];
+            matrix[j][i] ^= matrix[i][j];
+            matrix[i][j] ^= matrix[j][i];
+        }
+    }
 }
 
 void
