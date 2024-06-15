@@ -81,6 +81,31 @@ kthSmallest (int **matrix, int matrixSize, int *matrixColSize, int k)
   MinHeap *heap = createMinHeap (matrixSize);
 
   // 下面对算法进行具体实现
+    for (int i = 0; i < matrixSize; i++)
+    {
+      HeapNode node;
+      node.val = matrix[i][0];
+      node.row = i;
+      node.col = 0;
+      insertMinHeap (heap, node);
+    }
+
+  HeapNode hr; const int INT_MAX = (1 << 30) - 1;
+  for (int i = 0; i < k - 1; i++)
+    {
+      hr = extractMin (heap);
+      int nextVal = (hr.col < matrixColSize[hr.row] - 1)
+                      ? matrix[hr.row][hr.col + 1]
+                      : INT_MAX;
+      if (nextVal != INT_MAX)
+        {
+          HeapNode newNode;
+          newNode.val = nextVal;
+          newNode.row = hr.row;
+          newNode.col = hr.col + 1;
+          insertMinHeap (heap, newNode);
+        }
+    }
 
   int result = heap->array[0].val;
   free (heap->array);
