@@ -12,23 +12,26 @@ find_max (int *arr, int n)
   __asm__ volatile (
       // 用于循环计数的寄存器
       "li t0, 0\n"
-      // 将 max 初始化为数组的第一个元素值,保存到t1寄存器
-      "PLACEHOLDER\n\t"
+      // 将 max 初始化为数组的第一个元素值, 保存到 t1 寄存器
+      "lw t1, 0(%1)\n\t"
 
       "loop:\n\t"
       // 当前元素值保存在t2寄存器
       "lw t2, 0(%1)\n\t"
 
       // 如果 max >= 当前元素值，则跳转到next标签
-      "PLACEHOLDER\n\t"
+      "blt t1, t2, update_max\n\t"
+      "j next\n\t"
+
+      "update_max:\n\t"
       // 如果 max < 当前元素值，则更新 max 为当前元素值
-      "PLACEHOLDER\n\t"
+      "mv t1, t2\n\t"
 
       "next:\n\t"
       "addi %1, %1, 4\n\t"
       "addi t0, t0, 1\n\t"
       // 如果计数器小于数组长度，则继续循环
-      "PLACEHOLDER\n\t"
+      "blt t0, %2, loop\n\t"
 
       "end:\n\t"
       "mv %0, t1\n"
