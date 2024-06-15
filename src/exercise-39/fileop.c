@@ -15,6 +15,15 @@ fileop_init (void)
   //     printk(KERN_INFO "File operation successful\n")
   //   printk(KERN_ALERT "Failed to open file\n")
 
+  file_ptr = filp_open(FILE_NAME, O_RDWR | O_CREAT, 0644);
+  if (IS_ERR(file_ptr)) {
+      printk(KERN_ALERT "Failed to open file\n");
+      file_ptr = NULL;
+      return PTR_ERR(file_ptr);
+  } else {
+      printk(KERN_INFO "File operation successful\n");
+  }
+
   return 0;
 }
 
