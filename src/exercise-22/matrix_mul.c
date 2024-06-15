@@ -18,6 +18,13 @@ multiply (int **A, int ASize, int *AColSize, int **B, int BSize, int *BColSize,
     }
 
   // 下面通过多重循环实现两个矩阵相乘
+  for (int i = 0; i < ASize; i++) {
+    for (int j = 0; j < BColSize[0]; j++) {
+      for (int k = 0; k < AColSize[i]; k++) {
+        result[i][j] += A[i][k] * B[k][j];
+      }
+    }
+  }
 
   *returnSize = ASize;
   return result;

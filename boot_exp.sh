@@ -1,0 +1,13 @@
+sudo qemu-system-riscv64 \
+    -machine 'virt' \
+    -cpu 'rv64' \
+    -m 1G \
+    -device virtio-blk-device,drive=hd \
+    -drive file=../2024-exercises-stage-1/2024-exercises-virtual-machines/stage-1.qcow2,if=none,id=hd \
+    -virtfs local,id=lee,path=./,mount_tag=lee,security_model=passthrough \
+    -bios /usr/lib/riscv64-linux-gnu/opensbi/generic/fw_jump.elf \
+    -kernel /usr/lib/u-boot/qemu-riscv64_smode/uboot.elf \
+    -object rng-random,filename=/dev/urandom,id=rng \
+    -device virtio-rng-device,rng=rng \
+    -nographic \
+    -append "root=LABEL=rootfs console=ttyS0"
