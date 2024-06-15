@@ -16,9 +16,9 @@ is_sorted (int *arr, int n)
 
       "loop:\n\t"
       // 保存数组当前元素到t2寄存器
-      "PLACEHOLDER\n\t"
+      "lw t2, 0(%1)\n\t"
       // 保存数组下一个元素到t3寄存器
-      "PLACEHOLDER\n\t"
+      "lw t3, 0(t1)\n\t"
       // 如果当前元素大于下一个元素，数组不是按非降序排列
       "bge t3, t2, sorted\n\t"
       "li %0, 0\n\t"
@@ -26,13 +26,13 @@ is_sorted (int *arr, int n)
 
       "sorted:\n\t"
       // 指针移动到数组下一个元素
-      "PLACEHOLDER\n\t"
+      "addi %1, %1, 4\n\t"
       // 指针移动到数组下下一个元素
-      "PLACEHOLDER\n\t"
+      "addi t1, t1, 4\n\t"
 
       "addi t0, t0, 1\n\t"
       // 如果计数器小于数组长度，则继续循环
-      "PLACEHOLDER\n\t"
+      "blt t0, %2, loop\n\t"
 
       "end:\n\t"
       : "=r"(result)
