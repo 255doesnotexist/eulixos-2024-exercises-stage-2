@@ -17,13 +17,13 @@ count_occurrences (int *arr, int n, int target)
 
       "loop_start:\n"
       // 如果索引 index >= n，则跳转到 loop_end
-      "PLACEHOLDER\n"
+      "bge t1, %2, loop_end\n"
 
       // 保存数组当前元素到t2寄存器
-      "PLACEHOLDER\n"
+      "lw t2, 0(%1)\n"
 
       // 对比数组元素与目标值，如果不相等，跳转到not_equal标签
-      "PLACEHOLDER\n"
+      "bne t2, %3, not_equal\n"
       "addi t0, t0, 1\n"
 
       "not_equal:\n"
