@@ -33,6 +33,16 @@ dev_read (struct file *file, char *buffer, size_t len, loff_t *offset)
   int bytes_read = 0;
 
   // >>> 实现读入设备字符。
+  if (*message_ptr == 0)
+    return 0;
+
+  while (len && *message_ptr)
+    {
+      // Copy one byte to user space
+      put_user (*(message_ptr++), buffer++);
+      len--;
+      bytes_read++;
+    }
 
   return bytes_read;
 }
