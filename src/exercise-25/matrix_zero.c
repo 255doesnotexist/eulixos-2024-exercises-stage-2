@@ -15,6 +15,31 @@ setZeroes (int **matrix, int matrixSize, int *matrixColSize)
 
   // 在下面实现将矩阵中为0的元素所在的行和列都置为0
 
+      for (int i = 0; i < m; i++) {
+        for (int j = 0; j < n; j++) {
+            if (matrix[i][j] == 0) {
+                row[i] = 1;
+                col[j] = 1;
+            }
+        }
+    }
+
+    for (int i = 0; i < m; i++) {
+        if (row[i] == 1) {
+            for (int j = 0; j < n; j++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
+    for (int j = 0; j < n; j++) {
+        if (col[j] == 1) {
+            for (int i = 0; i < m; i++) {
+                matrix[i][j] = 0;
+            }
+        }
+    }
+
   free (row);
   free (col);
 }
