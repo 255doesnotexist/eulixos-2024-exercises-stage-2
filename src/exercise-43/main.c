@@ -16,23 +16,23 @@ fibonacci (int n)
       "li t1, 1\n\t"
 
       // 如果 n 为 0，则返回 return_zero标签
-      "PLACEHOLDER\n\t"
+      "beq %1, x0, return_zero\n\t"
       // 如果 n 为 1，则返回 return_one标签
-      "PLACEHOLDER\n\t"
+      "beq %1, x1, return_one\n\t"
 
       "loop:\n\t"
       "addi %1, %1, -1\n\t"
       "add t2, t0, t1\n\t"
 
       // 更新 t0 为 t1
-      "PLACEHOLDER\n\t"
+      "mv t0, t1\n\t"
       // 更新 t1 为 t2
       "mv t1, t2\n\t"
 
       // 如果 n 不为 0，则继续循环
       "bne %1, x0, loop\n\t"
       // 循环结束，最终结果存储在 %0 中
-      "PLACEHOLDER\n\t"
+      "mv %0, t0\n\t"
       "j end\n\t"
 
       // n 为 0 时的返回值
