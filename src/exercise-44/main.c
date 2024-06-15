@@ -17,15 +17,15 @@ calculate_sum (int *arr, int n)
 
       "loop:\n\t"
       // 如果索引是否大于等于n，跳转end标签
-      "PLACEHOLDER\n\t"
+      "bge t0, %2, end\n\t"
 
       // 从数组中加载元素值保存到t2寄存器
       "lw t2, 0(%1)\n\t"
 
       // 计算 result += arr[i],result值保存在t1寄存器
-      "PLACEHOLDER\n\t"
+      "add t1, t1, t2\n\t"
       // 数组索引自增，指向下一个元素
-      "PLACEHOLDER\n\t"
+      "addi %1, %1, 4\n\t" 
 
       "addi t0, t0, 1\n\t"
       "j loop\n"
