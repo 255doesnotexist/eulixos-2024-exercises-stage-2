@@ -12,8 +12,14 @@ set_memory_limit (rlim_t memory_limit)
   struct rlimit rl;
 
   // TODO 设置进程的内存限制
+  rl.rlim_cur = memory_limit;
+  rl.rlim_max = memory_limit;
 
   // TODO 使用 setrlimit 函数设置进程的资源限制
+  if (setrlimit(RLIMIT_AS, &rl) != 0) {
+      perror("setrlimit failed");
+      exit(EXIT_FAILURE);
+  }
 }
 
 void
